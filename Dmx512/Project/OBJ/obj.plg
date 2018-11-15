@@ -1,0 +1,11 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+D:\西兰花资料\畅学版\STM32畅学版\示例程序\7.RS485转发接收的字符(中断方式接收)\Project\Project.uvproj
+Project File Date:  05/11/2015
+
+<h2>Output:</h2>
+Clean started: Project: 'Project'
+   deleting intermediate output files for target 'STM3210E-XLH'
