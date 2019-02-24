@@ -1,6 +1,0 @@
---c99 -c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I ..\CMSIS -I ..\FWlib\inc -I ..\USER
--I.\RTE\_Stm32f103_Hours_timer
--IC:\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
--IC:\Keil_v5\ARM\CMSIS\Include
--D__UVISION_VERSION="523" -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD
--o .\led.o --omf_browse .\led.crf --depend .\led.d "led.c"
