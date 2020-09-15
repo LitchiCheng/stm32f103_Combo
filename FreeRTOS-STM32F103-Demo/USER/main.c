@@ -13,7 +13,8 @@
 #include "portable.h"
 #include "FreeRTOSConfig.h"
 
-int Encoder_Left;             //左右编码器的脉冲计数
+uint64_t Encoder_Left;             //左右编码器的脉冲计数
+float rpm;
 void encoderHandle_Task(void *pvParameters)
 {
 	static u8 state = 0;
@@ -22,8 +23,10 @@ void encoderHandle_Task(void *pvParameters)
 	TIM3_Int_Init(499,7199);
 	while(1)
 	{
-		printf("%d\r\n",Encoder_Left);
-		vTaskDelay(500/portTICK_RATE_MS);
+		Encoder_Left=(short)TIM2->CNT;
+		//printf("%lld\r\n",Encoder_Left);
+		printf("%f\r\n",rpm);
+		//vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
@@ -33,18 +36,11 @@ void pwmVel_Task(void *pvParameters)
 	static u8 state = 0;
 	pvParameters = pvParameters;
 	PwmInit();
+	LedIoInit();
 	while(1)
 	{
-		for(cnt=0;cnt<100;cnt+=5)//每隔70MS改变一次占空比
-		{
-			LedPwmCtrl(cnt,cnt);
-			vTaskDelay(1000/portTICK_RATE_MS);
-		}
-		for(cnt=100;cnt>0;cnt-=5)//每隔70MS改变一次占空比
-		{
-			LedPwmCtrl(cnt,cnt);
-			vTaskDelay(1000/portTICK_RATE_MS);
-		}
+		LedPwmCtrl(50,50);
+		vTaskDelay(70/portTICK_RATE_MS);
 	}
 }
 
@@ -53,11 +49,7 @@ int main(void)
 	uart_init(9600);	            //=====串口初始化
 	xTaskCreate( encoderHandle_Task, "encoder", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL);
 	xTaskCreate( pwmVel_Task, "pwm", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL );
-
+ 
 	vTaskStartScheduler();
-	while(1)
-	{
-		printf("%d\r\n",Encoder_Left);
-	} 
 }
 

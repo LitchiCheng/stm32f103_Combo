@@ -8,4 +8,5 @@
 void TIM3_Int_Init(u16 arr,u16 psc);
 void Read_Distane(void);
 void TIM3_IRQHandler(void);
+extern float rpm;
 #endif

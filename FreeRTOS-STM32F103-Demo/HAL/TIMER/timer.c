@@ -29,12 +29,15 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 	TIM_Cmd(TIM3, ENABLE);  //使能TIMx外设
 							 
 }
+
+static uint64_t last_encoder = 0;
 void TIM3_IRQHandler(void)   //TIM3中断
 {
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查指定的TIM中断发生与否:TIM 中断源 
 		{
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源 
-		Encoder_Left=(short)TIM2->CNT;
-		TIM2->CNT=0;	
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源
+		rpm = (Encoder_Left - last_encoder) / (4 * 100.0)*1000*60 / 50.0; 
+		last_encoder = Encoder_Left;
+			//TIM2->CNT=0;	
 		}
 }

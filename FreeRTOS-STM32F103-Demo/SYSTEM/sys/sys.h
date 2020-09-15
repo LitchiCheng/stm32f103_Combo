@@ -75,7 +75,7 @@
 #define JTAG_SWD_DISABLE   0X02
 #define SWD_ENABLE         0X01
 #define JTAG_SWD_ENABLE    0X00	
-extern int Encoder_Left;                     //左右编码器的脉冲计数
+extern uint64_t Encoder_Left;                     //左右编码器的脉冲计数
 /////////////////////////////////////////////////////////////////  
 void Stm32_Clock_Init(u8 PLL);  //时钟初始化  
 void Sys_Soft_Reset(void);      //系统软复位

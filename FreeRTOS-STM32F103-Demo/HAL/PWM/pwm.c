@@ -11,7 +11,7 @@ void PwmInit(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOE|
                          RCC_APB2Periph_GPIOB |RCC_APB2Periph_AFIO, ENABLE);
   /* ARR寄存器用来配置频率，此处配置为 10 Khz */
-  TimerPeriod = (SystemCoreClock / 10000 ) - 1;
+  TimerPeriod = (SystemCoreClock / 5000 ) - 1;
 
 
   /* Time Base configuration */
@@ -45,7 +45,7 @@ void LedIoInit(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   /* TIM1的PWM1和PWM2通道对应引脚是PA8和PA9，这些可以在硬件手册中找到*/
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8/* | GPIO_Pin_9*/;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -62,8 +62,8 @@ void LedPwmCtrl(uint8_t PWM1,uint8_t PWM2)
 	TIM_OCInitStructure.TIM_Pulse = Channel1Pulse;
 	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
 	
-  Channel2Pulse = (uint16_t) (((uint32_t) PWM2 * (TimerPeriod - 1)) / 100);
-  TIM_OCInitStructure.TIM_Pulse = Channel2Pulse;
-  TIM_OC2Init(TIM1, &TIM_OCInitStructure);
+//  Channel2Pulse = (uint16_t) (((uint32_t) PWM2 * (TimerPeriod - 1)) / 100);
+//  TIM_OCInitStructure.TIM_Pulse = Channel2Pulse;
+//  TIM_OC2Init(TIM1, &TIM_OCInitStructure);
 }
 
