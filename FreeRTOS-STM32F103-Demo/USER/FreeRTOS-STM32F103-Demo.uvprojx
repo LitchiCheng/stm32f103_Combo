@@ -324,7 +324,7 @@
             <wLevel>0</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_ HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\USER;..\COER;..\STM32F10x_FWLib\inc;..\HAL;..\SYSTEM;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HAL\ENCODER;..\HAL\TIMER;..\FreeRTOS;..\FreeRTOS\include;..\HAL\PWM</IncludePath>
+              <IncludePath>..\USER;..\COER;..\STM32F10x_FWLib\inc;..\HAL;..\SYSTEM;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HAL\ENCODER;..\HAL\TIMER;..\FreeRTOS;..\FreeRTOS\include;..\HAL\PWM;..\Tool</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -396,6 +396,11 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>GlobalData.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\GlobalData.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -716,6 +721,16 @@
               <FileName>timers.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\FreeRTOS\include\timers.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Tools</GroupName>
+          <Files>
+            <File>
+              <FileName>tools.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Tool\tools.h</FilePath>
             </File>
           </Files>
         </Group>

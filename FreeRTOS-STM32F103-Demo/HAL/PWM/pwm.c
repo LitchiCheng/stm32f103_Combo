@@ -45,7 +45,7 @@ void LedIoInit(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   /* TIM1的PWM1和PWM2通道对应引脚是PA8和PA9，这些可以在硬件手册中找到*/
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8/* | GPIO_Pin_9*/;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 /*| GPIO_Pin_11*/;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(GPIOA, &GPIO_InitStructure);

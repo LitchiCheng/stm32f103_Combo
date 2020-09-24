@@ -36,7 +36,7 @@ void TIM3_IRQHandler(void)   //TIM3中断
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查指定的TIM中断发生与否:TIM 中断源 
 		{
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //清除TIMx的中断待处理位:TIM 中断源
-		rpm = (Encoder_Left - last_encoder) / (4 * 100.0)*1000*60 / 50.0; 
+		//rpm = (Encoder_Left - last_encoder) / (4 * 100.0)*1000*60 / 50.0; 
 		last_encoder = Encoder_Left;
 			//TIM2->CNT=0;	
 		}
