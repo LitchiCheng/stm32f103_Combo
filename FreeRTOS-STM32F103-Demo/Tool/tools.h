@@ -11,7 +11,7 @@
 
 #define getCout2ms()	xTaskGetTickCount()
 #define getCout2s()		getCout2ms() / 1000
-#define getLeftEncoder()	TIM2->CNT
+#define getLeftEncoder()	(TIM2->CNT)
 
 
 #endif //_TOOLS_H_

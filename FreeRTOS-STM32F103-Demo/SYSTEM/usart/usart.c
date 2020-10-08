@@ -57,9 +57,45 @@ void uart_init(u32 bound){
 	USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
+		
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+	
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
 
-  USART_Init(USART1, &USART_InitStructure); //初始化串口1
-  USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);//开启串口接受中断
-  USART_Cmd(USART1, ENABLE);                    //使能串口1 
+	USART_Init(USART1, &USART_InitStructure); //初始化串口1
+	USART_Cmd(USART1, ENABLE);                    //使能串口1 
+	USART_ClearFlag(USART1, USART_FLAG_TC);
+}
 
+#define Max_BUFF_Len 128
+unsigned char Uart2_Buffer[Max_BUFF_Len];
+unsigned int Uart2_Rx=0;
+void USART1_IRQHandler(void)      //串口1 中断服务程序
+{
+	uint8_t Clear = 0;
+	u8 rx_dat;
+	/*如果接收到一字节数据*/
+	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)	    //判断读寄存器是否非空
+	{	
+		USART_ClearITPendingBit(USART1, USART_IT_RXNE);	        //清除中断标志
+		Uart2_Buffer[Uart2_Rx] = USART_ReceiveData(USART1);     //接收串口1数据到buff缓冲区
+        Uart2_Rx++;
+    /*如果接收到一帧数据*/
+	}else if(USART_GetITStatus(USART1,USART_IT_IDLE) != RESET){		
+		Clear = USART1->SR;
+		Clear = USART1->DR;		//清除IDLE标志
+		Uart2_Buffer[Uart2_Rx] = 0x00;
+		Uart2_Rx=0;
+		printf("%s\r\n", Uart2_Buffer);
+	}
+	if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET)        //这段是为了避免STM32 USART 第一个字节发不出去的BUG 
+	{ 
+		USART_ITConfig(USART1, USART_IT_TXE, DISABLE);			//禁止发缓冲器空中断， 
+	}	
 }

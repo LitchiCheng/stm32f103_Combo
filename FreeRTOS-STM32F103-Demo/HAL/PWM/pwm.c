@@ -11,7 +11,7 @@ void PwmInit(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOE|
                          RCC_APB2Periph_GPIOB |RCC_APB2Periph_AFIO, ENABLE);
   /* ARR寄存器用来配置频率，此处配置为 10 Khz */
-  TimerPeriod = (SystemCoreClock / 5000 ) - 1;
+  TimerPeriod = (SystemCoreClock / 7200 ) - 1;
 
 
   /* Time Base configuration */
@@ -58,7 +58,7 @@ void LedIoInit(void)
 *************************************************/
 void LedPwmCtrl(uint8_t PWM1,uint8_t PWM2)
 {
-  Channel1Pulse = (uint16_t) (((uint32_t) PWM1 * (TimerPeriod - 1)) / 100);
+	Channel1Pulse = (uint16_t) (((uint32_t) PWM1 * (TimerPeriod - 1)) / 100);
 	TIM_OCInitStructure.TIM_Pulse = Channel1Pulse;
 	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
 	
