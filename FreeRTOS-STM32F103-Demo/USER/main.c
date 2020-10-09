@@ -23,13 +23,10 @@ void encoderCnt_Task(void *pvParameters)
 	static int N = 0;// 圈数
 	while(1){
 		encoder[1] = TIM2->CNT;
-
-		if((encoder[1] - encoder[0] ) > 0x7FFF)
-		{
+		if((encoder[1] - encoder[0] ) > 0x7FFF){
 			N--;
 		}
-		else if( (encoder[0] - encoder[1] ) > 0x7FFF)
-		{
+		else if( (encoder[0] - encoder[1] ) > 0x7FFF){
 			N++;
 		}
 		EncCnt = N * 0xFFFF + encoder[1];
@@ -78,7 +75,6 @@ void encoderHandle_Task(void *pvParameters)
 		int64_t now_cout = EncCnt;
 		uint32_t now_time = getCout2ms();
 		if(now_time - last_time >= 2){
-			//printf("1s up \r\n");
 			rpm = ((now_cout - last_cout) / 400.0f) * 100.0f * 60.0f;
 			int64_t diff = ((int)50-last_cout);
 			//diff = (diff < 0) ? -diff : diff;
@@ -90,7 +86,7 @@ void encoderHandle_Task(void *pvParameters)
 			last_diff = diff;
 			int pwm = 100-((kp*diff+ki*diff_sum+kp*diff_speed)/ 20000);
 			if(diff >= 5 && pwm>98) pwm = 98;
-			LedPwmCtrl(pwm,50);
+			//LedPwmCtrl(pwm,50);
 			//printf("%lld,%d\n",diff,pwm);
 			last_cout = now_cout;
 			last_time = now_time;
@@ -101,18 +97,45 @@ void encoderHandle_Task(void *pvParameters)
 
 
 
+xQueueHandle xQueuePwm;
+
 void pwmVel_Task(void *pvParameters)
 {
 	static u8 state = 0;
 	pvParameters = pvParameters;
 	PwmInit();
 	LedIoInit();
+	xQueuePwm = xQueueCreate( 10, sizeof(uint8_t) );
 	while(1)
 	{
-		//printf("%d,%f\r\n",EncCnt,rpm);
+		
+		static uint8_t pwm = 0;
+		if( xQueueReceive( xQueuePwm, &( pwm ), ( TickType_t ) 10 ) )
+        {
+            LedPwmCtrl(pwm,50);
+        }
 		vTaskDelay(100/portTICK_RATE_MS);
+		printf("%d,%f\r\n",pwm,rpm);
 	}
 }
+
+xQueueHandle xQueueRx;
+void uartCmd_Task(void *pvParameters)
+{
+	portCHAR cChar;
+    xQueueRx = xQueueCreate(20, sizeof(u8));/*创建一个深度为20的队列*/
+    while(1)
+    {
+        if(xQueueReceive(xQueueRx, &cChar, 10/portTICK_RATE_MS)==pdTRUE) /*队列中有数据*/
+        {
+            printf("%c",cChar);/*输出数据*/
+			if(xQueuePwm != 0)
+				xQueueSend( xQueuePwm, ( void * ) &cChar, ( TickType_t ) 0 );
+        }
+    }
+}
+
+
 
 int main(void)
 { 
@@ -120,6 +143,7 @@ int main(void)
 	xTaskCreate( encoderHandle_Task, "encoder", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL);
 	xTaskCreate( encoderCnt_Task, "cnt", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL );
 	xTaskCreate( pwmVel_Task, "pwm", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL );
+	xTaskCreate( uartCmd_Task, "uart_cmd", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL );
  
 	vTaskStartScheduler();
 }

@@ -1,5 +1,12 @@
 #include "sys.h"
-#include "usart.h"	  
+#include "usart.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "list.h"
+#include "portable.h"
+#include "FreeRTOSConfig.h"
+#include "tools.h"
   /**************************************************************************
 作者：平衡小车之家
 我的淘宝小店：http://shop114407458.taobao.com/
@@ -73,26 +80,24 @@ void uart_init(u32 bound){
 	USART_ClearFlag(USART1, USART_FLAG_TC);
 }
 
-#define Max_BUFF_Len 128
-unsigned char Uart2_Buffer[Max_BUFF_Len];
-unsigned int Uart2_Rx=0;
+extern xQueueHandle xQueueRx;
 void USART1_IRQHandler(void)      //串口1 中断服务程序
 {
+	portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
 	uint8_t Clear = 0;
 	u8 rx_dat;
 	/*如果接收到一字节数据*/
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)	    //判断读寄存器是否非空
 	{	
 		USART_ClearITPendingBit(USART1, USART_IT_RXNE);	        //清除中断标志
-		Uart2_Buffer[Uart2_Rx] = USART_ReceiveData(USART1);     //接收串口1数据到buff缓冲区
-        Uart2_Rx++;
+		rx_dat = USART_ReceiveData(USART1);     //接收串口1数据到buff缓冲区
+		xQueueSendToBackFromISR(xQueueRx, &rx_dat, &xHigherPriorityTaskWoken); /*有更高优先级的TASK被解除阻塞,ze xHigherPriorityTaskWoken为true*/
+        portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+		
     /*如果接收到一帧数据*/
 	}else if(USART_GetITStatus(USART1,USART_IT_IDLE) != RESET){		
 		Clear = USART1->SR;
 		Clear = USART1->DR;		//清除IDLE标志
-		Uart2_Buffer[Uart2_Rx] = 0x00;
-		Uart2_Rx=0;
-		printf("%s\r\n", Uart2_Buffer);
 	}
 	if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET)        //这段是为了避免STM32 USART 第一个字节发不出去的BUG 
 	{ 

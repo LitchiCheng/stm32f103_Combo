@@ -11,7 +11,7 @@ void PwmInit(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOE|
                          RCC_APB2Periph_GPIOB |RCC_APB2Periph_AFIO, ENABLE);
   /* ARR寄存器用来配置频率，此处配置为 10 Khz */
-  TimerPeriod = (SystemCoreClock / 7200 ) - 1;
+  TimerPeriod = (SystemCoreClock / 3600 ) - 1;
 
 
   /* Time Base configuration */
