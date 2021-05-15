@@ -105,9 +105,10 @@ int main(void)
   {
 		uint8_t pData[4] = {0x00, 0x00, 0x00,0x00};
 		static uint8_t cmd[4] = {0x00,0x01,0x02,0x03};
-		HAL_SPI_TransmitReceive(&hspi1, cmd, pData, 4, 10000);
+		//HAL_SPI_TransmitReceive(&hspi1, cmd, pData, 4, 10000);
+		HAL_SPI_TransmitReceive_DMA(&hspi1, cmd, pData, 4);
 		cmd[3] += 1;
-		HAL_Delay(5);
+		HAL_Delay(2);
 //		if (HAL_SPI_Receive(&hspi1, pData,4,280843555) == HAL_OK){
 //				if(pData[0] == 0x01 && pData[3] == 0x03){
 //						cmd[3] += 1;
@@ -182,7 +183,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

@@ -77,6 +77,15 @@ int fgetc(FILE *f)
   HAL_UART_Receive(&huart1, &ch, 1, 0xffff);
   return ch;
 }
+
+void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi){
+		//printf("rx complete\r\n");
+}
+
+void spiRxCallback(DMA_HandleTypeDef* i){
+	//printf("xxxxx\r\n");
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -118,16 +127,19 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	printf("start \r\n");
+	uint8_t pData[4] = {0x00, 0x00, 0x00,0x00};
+	static uint8_t cmd[4] = {0x00,0x01,0x02,0x03};
   while (1)
   {
-		uint8_t pData[4] = {0x00, 0x00, 0x00,0x00};
-		static uint8_t cmd[4] = {0x00,0x01,0x02,0x03};
+		
 		cmd[0] += 1;
-		if (HAL_SPI_TransmitReceive(&hspi1, cmd, pData,4,1) == HAL_OK){
+		//if (HAL_SPI_TransmitReceive(&hspi1, cmd, pData,4,1) == HAL_OK){
+		if (HAL_SPI_TransmitReceive_DMA(&hspi1, cmd, pData,4) == HAL_OK){
 				if(pData[0] == 0x00 && pData[1] == 0x01 && pData[2] == 0x02){
 					printf("0x%02x, 0x%02x, 0x%02x, 0x%02x\r\n", pData[0],pData[1],pData[2],pData[3]);
 				}
 		}
+		HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -195,7 +207,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

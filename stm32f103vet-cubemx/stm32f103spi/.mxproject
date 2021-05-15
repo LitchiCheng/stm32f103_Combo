@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=G:/stm32cubeMx/stm32f103vet/stm32f103spi/Inc
+HeaderPath=G:/stm32f103_Combo/stm32f103vet-cubemx/stm32f103spi/Inc
 HeaderFiles=stm32f1xx_it.h;stm32f1xx_hal_conf.h;main.h;
-SourcePath=G:/stm32cubeMx/stm32f103vet/stm32f103spi/Src
+SourcePath=G:/stm32f103_Combo/stm32f103vet-cubemx/stm32f103spi/Src
 SourceFiles=stm32f1xx_it.c;stm32f1xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
