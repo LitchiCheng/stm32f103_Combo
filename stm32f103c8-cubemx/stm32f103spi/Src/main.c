@@ -108,7 +108,7 @@ int main(void)
 		//HAL_SPI_TransmitReceive(&hspi1, cmd, pData, 4, 10000);
 		HAL_SPI_TransmitReceive_DMA(&hspi1, cmd, pData, 4);
 		cmd[3] += 1;
-		HAL_Delay(2);
+		HAL_Delay(5);
 //		if (HAL_SPI_Receive(&hspi1, pData,4,280843555) == HAL_OK){
 //				if(pData[0] == 0x01 && pData[3] == 0x03){
 //						cmd[3] += 1;

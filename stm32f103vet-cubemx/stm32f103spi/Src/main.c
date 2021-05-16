@@ -139,7 +139,7 @@ int main(void)
 					printf("0x%02x, 0x%02x, 0x%02x, 0x%02x\r\n", pData[0],pData[1],pData[2],pData[3]);
 				}
 		}
-		HAL_Delay(1);
+		//HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
