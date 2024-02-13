@@ -48,7 +48,10 @@
 ## stm32f103c8-cubemx
 ### stm32f103spi
 - 效果：spi dma主机
+- PA5 PA6 PA7
+- 串口打印频率256000
 
 ## stm32f103vet-cubemx
 ### stm32f103spi
 - 效果：spi dma从机
+- PA5 PA6 PA7
